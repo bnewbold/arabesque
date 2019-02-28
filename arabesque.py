@@ -14,6 +14,10 @@ Commands/modes:
 
 Design docs in DESIGN.md
 
+This script was written by Bryan Newbold <bnewbold@archive.org> and is Free
+Software under the GPLv3 license (a copy of which should be included with this
+file).
+
 TODO:
 - open map in read-only when appropriate
 - some kind of stats dump command? (querying sqlite)
