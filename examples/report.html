@@ -1,0 +1,896 @@
+<h1>Crawl QA Report</h1>
+<p>This crawl report is auto-generated from a sqlite database file, which should be available/included.</p>
+<h3>Seedlist Stats</h3>
+<div style="margin: 1em 3em 1em 3em; "><code><table>
+  <thead><tr>
+  <th>identifiers</th>
+  <th>uris</th>
+  <th>domains</th>
+</tr></thead>
+<tr>
+  <td>480</td>
+  <td>583</td>
+  <td>163</td>
+</tr>
+</table><pre><b>QUERY:</b> SELECT COUNT(DISTINCT identifier) as identifiers, COUNT(DISTINCT initial_url) as uris, COUNT(DISTINCT initial_domain) AS domains FROM crawl_result;</pre>
+<br></code></div><p>FTP seed URLs</p>
+<div style="margin: 1em 3em 1em 3em; "><code><table>
+  <thead><tr>
+  <th>ftp_urls</th>
+</tr></thead>
+<tr>
+  <td>0</td>
+</tr>
+</table><pre><b>QUERY:</b> SELECT COUNT(*) as ftp_urls FROM crawl_result WHERE initial_url LIKE 'ftp://%';</pre>
+<br></code></div><h3>Successful Hits</h3>
+<div style="margin: 1em 3em 1em 3em; "><code><table>
+  <thead><tr>
+  <th>identifiers</th>
+  <th>uris</th>
+  <th>unique_sha1</th>
+</tr></thead>
+<tr>
+  <td>63</td>
+  <td>166</td>
+  <td>166</td>
+</tr>
+</table><pre><b>QUERY:</b> SELECT COUNT(DISTINCT identifier) as identifiers, COUNT(DISTINCT initial_url) as uris, COUNT(DISTINCT final_sha1) as unique_sha1 FROM crawl_result WHERE hit=1;</pre>
+<br></code></div><p>De-duplication percentage (aka, fraction of hits where content had been crawled and identified previously):</p>
+<div style="margin: 1em 3em 1em 3em; "><code><table>
+  <thead><tr>
+  <th>percent</th>
+</tr></thead>
+<tr>
+  <td>47.59036144578313</td>
+</tr>
+</table><pre><b>QUERY:</b> SELECT 100. * AVG(final_was_dedupe) as percent FROM crawl_result WHERE hit=1;</pre>
+<br></code></div><p>Top mimetypes for successful hits (these are usually filtered to a fixed list in post-processing):</p>
+<div style="margin: 1em 3em 1em 3em; "><code><table>
+  <thead><tr>
+  <th>final_mimetype</th>
+  <th>COUNT(*)</th>
+</tr></thead>
+<tr>
+  <td>application/pdf</td>
+  <td>161</td>
+</tr>
+<tr>
+  <td>application/octet-stream</td>
+  <td>5</td>
+</tr>
+</table><pre><b>QUERY:</b> SELECT final_mimetype, COUNT(*) FROM crawl_result WHERE hit=1 GROUP BY final_mimetype ORDER BY COUNT(*) DESC LIMIT 10;</pre>
+<br></code></div><p>Most popular breadcrumbs (a measure of how hard the crawler had to work):</p>
+<div style="margin: 1em 3em 1em 3em; "><code><table>
+  <thead><tr>
+  <th>breadcrumbs</th>
+  <th>COUNT(*)</th>
+</tr></thead>
+<tr>
+  <td>-</td>
+  <td>125</td>
+</tr>
+<tr>
+  <td>R</td>
+  <td>39</td>
+</tr>
+<tr>
+  <td>L</td>
+  <td>2</td>
+</tr>
+</table><pre><b>QUERY:</b> SELECT breadcrumbs, COUNT(*) FROM crawl_result WHERE hit=1 GROUP BY breadcrumbs ORDER BY COUNT(*) DESC LIMIT 10;</pre>
+<br></code></div><p>FTP vs. HTTP hits (200 is HTTP, 226 is FTP):</p>
+<div style="margin: 1em 3em 1em 3em; "><code><table>
+  <thead><tr>
+  <th>final_status_code</th>
+  <th>COUNT(*)</th>
+</tr></thead>
+<tr>
+  <td>200</td>
+  <td>166</td>
+</tr>
+</table><pre><b>QUERY:</b> SELECT final_status_code, COUNT(*) FROM crawl_result WHERE hit=1 GROUP BY final_status_code LIMIT 10;</pre>
+<br></code></div><h3>Domain Summary</h3>
+<p>Top <em>initial</em> domains:</p>
+<div style="margin: 1em 3em 1em 3em; "><code><table>
+  <thead><tr>
+  <th>initial_domain</th>
+  <th>COUNT(*)</th>
+  <th>percent</th>
+</tr></thead>
+<tr>
+  <td>www.nature.com</td>
+  <td>22</td>
+  <td>3.7735849056603774</td>
+</tr>
+<tr>
+  <td>www.medicaljournals.se</td>
+  <td>21</td>
+  <td>3.6020583190394513</td>
+</tr>
+<tr>
+  <td>ajpgi.physiology.org</td>
+  <td>14</td>
+  <td>2.4013722126929675</td>
+</tr>
+<tr>
+  <td>jn.physiology.org</td>
+  <td>12</td>
+  <td>2.058319039451115</td>
+</tr>
+<tr>
+  <td>naukaru.ru</td>
+  <td>12</td>
+  <td>2.058319039451115</td>
+</tr>
+<tr>
+  <td>www.physiology.org</td>
+  <td>12</td>
+  <td>2.058319039451115</td>
+</tr>
+<tr>
+  <td>web.mit.edu</td>
+  <td>11</td>
+  <td>1.8867924528301887</td>
+</tr>
+<tr>
+  <td>www.nada.kth.se</td>
+  <td>11</td>
+  <td>1.8867924528301887</td>
+</tr>
+<tr>
+  <td>medicaljournals.se</td>
+  <td>10</td>
+  <td>1.7152658662092624</td>
+</tr>
+<tr>
+  <td>www.jstage.jst.go.jp</td>
+  <td>10</td>
+  <td>1.7152658662092624</td>
+</tr>
+<tr>
+  <td>www.site.uottawa.ca</td>
+  <td>10</td>
+  <td>1.7152658662092624</td>
+</tr>
+<tr>
+  <td>www.tandfonline.com</td>
+  <td>10</td>
+  <td>1.7152658662092624</td>
+</tr>
+<tr>
+  <td>academic.oup.com</td>
+  <td>9</td>
+  <td>1.5437392795883362</td>
+</tr>
+<tr>
+  <td>iopscience.iop.org</td>
+  <td>9</td>
+  <td>1.5437392795883362</td>
+</tr>
+<tr>
+  <td>www.amjbot.org</td>
+  <td>9</td>
+  <td>1.5437392795883362</td>
+</tr>
+<tr>
+  <td>www.efmaefm.org</td>
+  <td>9</td>
+  <td>1.5437392795883362</td>
+</tr>
+<tr>
+  <td>ajpcell.physiology.org</td>
+  <td>8</td>
+  <td>1.3722126929674099</td>
+</tr>
+<tr>
+  <td>ajpheart.physiology.org</td>
+  <td>8</td>
+  <td>1.3722126929674099</td>
+</tr>
+<tr>
+  <td>content.iospress.com</td>
+  <td>8</td>
+  <td>1.3722126929674099</td>
+</tr>
+<tr>
+  <td>link.springer.com</td>
+  <td>8</td>
+  <td>1.3722126929674099</td>
+</tr>
+</table><pre><b>QUERY:</b> SELECT initial_domain, COUNT(*), 100. * COUNT(*) / (SELECT COUNT(*) FROM crawl_result) as percent FROM crawl_result GROUP BY initial_domain ORDER BY count(*) DESC LIMIT 20;</pre>
+<br></code></div><p>Top <em>successful, final</em> domains, where hits were found:</p>
+<div style="margin: 1em 3em 1em 3em; "><code><table>
+  <thead><tr>
+  <th>initial_domain</th>
+  <th>COUNT(*)</th>
+  <th>percent</th>
+</tr></thead>
+<tr>
+  <td>www.physiology.org</td>
+  <td>12</td>
+  <td>7.228915662650603</td>
+</tr>
+<tr>
+  <td>www.jstage.jst.go.jp</td>
+  <td>10</td>
+  <td>6.024096385542169</td>
+</tr>
+<tr>
+  <td>content.iospress.com</td>
+  <td>8</td>
+  <td>4.819277108433735</td>
+</tr>
+<tr>
+  <td>digital.library.unt.edu</td>
+  <td>7</td>
+  <td>4.216867469879518</td>
+</tr>
+<tr>
+  <td>files.eccomasproceedia.org</td>
+  <td>7</td>
+  <td>4.216867469879518</td>
+</tr>
+<tr>
+  <td>link.springer.com</td>
+  <td>7</td>
+  <td>4.216867469879518</td>
+</tr>
+<tr>
+  <td>www.scielo.br</td>
+  <td>7</td>
+  <td>4.216867469879518</td>
+</tr>
+<tr>
+  <td>www.termedia.pl</td>
+  <td>7</td>
+  <td>4.216867469879518</td>
+</tr>
+<tr>
+  <td>ijpsr.com</td>
+  <td>6</td>
+  <td>3.6144578313253013</td>
+</tr>
+<tr>
+  <td>uvadoc.uva.es</td>
+  <td>6</td>
+  <td>3.6144578313253013</td>
+</tr>
+<tr>
+  <td>www.jafs.com.pl</td>
+  <td>6</td>
+  <td>3.6144578313253013</td>
+</tr>
+<tr>
+  <td>hal.archives-ouvertes.fr</td>
+  <td>5</td>
+  <td>3.0120481927710845</td>
+</tr>
+<tr>
+  <td>iopscience.iop.org</td>
+  <td>5</td>
+  <td>3.0120481927710845</td>
+</tr>
+<tr>
+  <td>www.cambridge.org</td>
+  <td>5</td>
+  <td>3.0120481927710845</td>
+</tr>
+<tr>
+  <td>digitool.library.mcgill.ca</td>
+  <td>4</td>
+  <td>2.4096385542168677</td>
+</tr>
+<tr>
+  <td>www.ejgm.co.uk</td>
+  <td>4</td>
+  <td>2.4096385542168677</td>
+</tr>
+<tr>
+  <td>www.pnas.org</td>
+  <td>4</td>
+  <td>2.4096385542168677</td>
+</tr>
+<tr>
+  <td>aaltodoc.aalto.fi</td>
+  <td>3</td>
+  <td>1.8072289156626506</td>
+</tr>
+<tr>
+  <td>citeseerx.ist.psu.edu</td>
+  <td>3</td>
+  <td>1.8072289156626506</td>
+</tr>
+<tr>
+  <td>digital.csic.es</td>
+  <td>3</td>
+  <td>1.8072289156626506</td>
+</tr>
+</table><pre><b>QUERY:</b> SELECT initial_domain, COUNT(*), 100. * COUNT(*) / (SELECT COUNT(*) FROM crawl_result WHERE hit=1) AS percent  FROM crawl_result WHERE hit=1 GROUP BY initial_domain ORDER BY COUNT(*) DESC LIMIT 20;</pre>
+<br></code></div><p>Top <em>non-successful, final</em> domains where crawl paths terminated before a successful hit (but crawl did run):</p>
+<div style="margin: 1em 3em 1em 3em; "><code><table>
+  <thead><tr>
+  <th>final_domain</th>
+  <th>COUNT(*)</th>
+</tr></thead>
+<tr>
+  <td>www.medicaljournals.se</td>
+  <td>21</td>
+</tr>
+<tr>
+  <td>www.nature.com</td>
+  <td>21</td>
+</tr>
+<tr>
+  <td>ajpgi.physiology.org</td>
+  <td>14</td>
+</tr>
+<tr>
+  <td>jn.physiology.org</td>
+  <td>12</td>
+</tr>
+<tr>
+  <td>naukaru.ru</td>
+  <td>12</td>
+</tr>
+<tr>
+  <td>web.mit.edu</td>
+  <td>11</td>
+</tr>
+<tr>
+  <td>www.nada.kth.se</td>
+  <td>11</td>
+</tr>
+<tr>
+  <td>medicaljournals.se</td>
+  <td>10</td>
+</tr>
+<tr>
+  <td>www.site.uottawa.ca</td>
+  <td>10</td>
+</tr>
+<tr>
+  <td>www.tandfonline.com</td>
+  <td>10</td>
+</tr>
+<tr>
+  <td>academic.oup.com</td>
+  <td>9</td>
+</tr>
+<tr>
+  <td>www.amjbot.org</td>
+  <td>9</td>
+</tr>
+<tr>
+  <td>www.efmaefm.org</td>
+  <td>9</td>
+</tr>
+<tr>
+  <td>ajpcell.physiology.org</td>
+  <td>8</td>
+</tr>
+<tr>
+  <td>ajpheart.physiology.org</td>
+  <td>8</td>
+</tr>
+<tr>
+  <td>pdfs.journals.lww.com</td>
+  <td>8</td>
+</tr>
+<tr>
+  <td>www.osti.gov</td>
+  <td>8</td>
+</tr>
+<tr>
+  <td>ajpregu.physiology.org</td>
+  <td>7</td>
+</tr>
+<tr>
+  <td>pubs.rsna.org</td>
+  <td>7</td>
+</tr>
+<tr>
+  <td>download.atlantis-press.com</td>
+  <td>6</td>
+</tr>
+</table><pre><b>QUERY:</b> SELECT final_domain, COUNT(*) FROM crawl_result WHERE hit=0 AND final_status_code IS NOT NULL GROUP BY final_domain ORDER BY count(*) DESC LIMIT 20;</pre>
+<br></code></div><p>Top <em>uncrawled, initial</em> domains, where the crawl didn't even attempt to run:</p>
+<div style="margin: 1em 3em 1em 3em; "><code><table>
+  <thead><tr>
+  <th>initial_domain</th>
+  <th>COUNT(*)</th>
+</tr></thead>
+</table><pre><b>QUERY:</b> SELECT initial_domain, COUNT(*) FROM crawl_result WHERE hit=0 AND final_status_code IS NULL GROUP BY initial_domain ORDER BY count(*) DESC LIMIT 20;</pre>
+<br></code></div><p>Top <em>blocked, final</em> domains:</p>
+<div style="margin: 1em 3em 1em 3em; "><code><table>
+  <thead><tr>
+  <th>final_domain</th>
+  <th>COUNT(*)</th>
+</tr></thead>
+<tr>
+  <td>140.115.82.191</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>classes.maxwell.syr.edu</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>drona.csa.iisc.ernet.in</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>lamar.colostate.edu</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>linux46.ma.utexas.edu</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>mathro.fpms.ac.be</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>pdl.cmu.edu</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>sammelpunkt.philo.at</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>suma.ldc.usb.ve</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>virtualmentor.ama-assn.org</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>www.cais.ntu.edu.sg</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>www.cse.ucla.edu</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>www.ece.stevens-tech.edu</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>www.lance.colostate.edu</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>www2.asanet.org</td>
+  <td>1</td>
+</tr>
+</table><pre><b>QUERY:</b> SELECT final_domain, COUNT(*) FROM crawl_result WHERE hit=0 AND (final_status_code='-61' OR final_status_code='-2') GROUP BY final_domain ORDER BY count(*) DESC LIMIT 20;</pre>
+<br></code></div><p>Top <em>rate-limited, final</em> domains:</p>
+<div style="margin: 1em 3em 1em 3em; "><code><table>
+  <thead><tr>
+  <th>final_domain</th>
+  <th>COUNT(*)</th>
+</tr></thead>
+<tr>
+  <td>www.researchgate.net</td>
+  <td>6</td>
+</tr>
+<tr>
+  <td>openknowledge.worldbank.org</td>
+  <td>1</td>
+</tr>
+</table><pre><b>QUERY:</b> SELECT final_domain, COUNT(*) FROM crawl_result WHERE hit=0 AND final_status_code='429' GROUP BY final_domain ORDER BY count(*) DESC LIMIT 20;</pre>
+<br></code></div><h3>Status Summary</h3>
+<p>Top failure status codes:</p>
+<div style="margin: 1em 3em 1em 3em; "><code><table>
+  <thead><tr>
+  <th>final_status_code</th>
+  <th>COUNT(*)</th>
+</tr></thead>
+<tr>
+  <td>404</td>
+  <td>112</td>
+</tr>
+<tr>
+  <td>301</td>
+  <td>85</td>
+</tr>
+<tr>
+  <td>403</td>
+  <td>61</td>
+</tr>
+<tr>
+  <td>302</td>
+  <td>60</td>
+</tr>
+<tr>
+  <td>-6</td>
+  <td>36</td>
+</tr>
+<tr>
+  <td>303</td>
+  <td>21</td>
+</tr>
+<tr>
+  <td>-2</td>
+  <td>15</td>
+</tr>
+<tr>
+  <td>429</td>
+  <td>7</td>
+</tr>
+<tr>
+  <td>503</td>
+  <td>7</td>
+</tr>
+<tr>
+  <td>200</td>
+  <td>5</td>
+</tr>
+</table><pre><b>QUERY:</b> SELECT final_status_code, COUNT(*) FROM crawl_result WHERE hit=0 GROUP BY final_status_code ORDER BY count(*) DESC LIMIT 10;</pre>
+<br></code></div><h3>Example Results</h3>
+<p>A handful of random success lines:</p>
+<div style="margin: 1em 3em 1em 3em; "><code><table>
+  <thead><tr>
+  <th>identifier</th>
+  <th>initial_url</th>
+  <th>breadcrumbs</th>
+  <th>final_url</th>
+  <th>final_sha1</th>
+  <th>final_mimetype</th>
+</tr></thead>
+<tr>
+  <td><a href="https://doi.org/10.1017/s0022149x00006660
+">10.1017/s0022149x00006660
+</a></td>
+  <td><a href="https://www.cambridge.org/core/services/aop-cambridge-core/content/view/A291CBD43AD6F7FA0F44E6592E214060/S0022149X00006660a.pdf/div-class-title-jhl-volume-54-issue-4-cover-and-back-matter-div.pdf">https://www.cambridge.org/core/services/aop-cambridge-core/content/view/A291CBD43AD6F7FA0F44E6592E214060/S0022149X00006660a.pdf/div-class-title-jhl-volume-54-issue-4-cover-and-back-matter-div.pdf</a></td>
+  <td>-</td>
+  <td><a href="https://www.cambridge.org/core/services/aop-cambridge-core/content/view/A291CBD43AD6F7FA0F44E6592E214060/S0022149X00006660a.pdf/div-class-title-jhl-volume-54-issue-4-cover-and-back-matter-div.pdf">https://www.cambridge.org/core/services/aop-cambridge-core/content/view/A291CBD43AD6F7FA0F44E6592E214060/S0022149X00006660a.pdf/div-class-title-jhl-volume-54-issue-4-cover-and-back-matter-div.pdf</a></td>
+  <td>W7UGJ7XAIILAEZFHH73FZ7XH5XRUENOZ</td>
+  <td>application/pdf</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.7712/100016.2380.8613
+">10.7712/100016.2380.8613
+</a></td>
+  <td><a href="https://files.eccomasproceedia.org/papers/eccomas-congress-2016/8613.pdf?mtime=20170308165111">https://files.eccomasproceedia.org/papers/eccomas-congress-2016/8613.pdf?mtime=20170308165111</a></td>
+  <td>-</td>
+  <td><a href="https://files.eccomasproceedia.org/papers/eccomas-congress-2016/8613.pdf?mtime=20170308165111">https://files.eccomasproceedia.org/papers/eccomas-congress-2016/8613.pdf?mtime=20170308165111</a></td>
+  <td>FM5ZQWTUQ2N7T7SXFNLCVA6N5RWQRTI6</td>
+  <td>application/pdf</td>
+</tr>
+<tr>
+  <td></td>
+  <td><a href="https://aaltodoc.aalto.fi/bitstream/handle/123456789/17665/A1_hakonen_pertti_j_1987.pdf;jsessionid=F5E9AAC28EEB3F2E2ECA2997AA0A194B?sequence=1">https://aaltodoc.aalto.fi/bitstream/handle/123456789/17665/A1_hakonen_pertti_j_1987.pdf;jsessionid=F5E9AAC28EEB3F2E2ECA2997AA0A194B?sequence=1</a></td>
+  <td>R</td>
+  <td><a href="https://aaltodoc.aalto.fi/bitstream/handle/123456789/17665/A1_hakonen_pertti_j_1987.pdf;jsessionid=F5E9AAC28EEB3F2E2ECA2997AA0A194B?sequence=1">https://aaltodoc.aalto.fi/bitstream/handle/123456789/17665/A1_hakonen_pertti_j_1987.pdf;jsessionid=F5E9AAC28EEB3F2E2ECA2997AA0A194B?sequence=1</a></td>
+  <td>4OUP6PQQ6CISN26ZSYSI7YK4QZG2VBCH</td>
+  <td>application/pdf</td>
+</tr>
+<tr>
+  <td></td>
+  <td><a href="https://hal.archives-ouvertes.fr/hal-01578692/document">https://hal.archives-ouvertes.fr/hal-01578692/document</a></td>
+  <td>-</td>
+  <td><a href="https://hal.archives-ouvertes.fr/hal-01578692/document">https://hal.archives-ouvertes.fr/hal-01578692/document</a></td>
+  <td>6USL3UAMYQSKX2CLZXZ3N7YA7RBE4MAZ</td>
+  <td>application/pdf</td>
+</tr>
+<tr>
+  <td></td>
+  <td><a href="http://www.jafs.com.pl/pdf-80904-17172?filename=Effect">http://www.jafs.com.pl/pdf-80904-17172?filename=Effect</a></td>
+  <td>-</td>
+  <td><a href="http://www.jafs.com.pl/pdf-80904-17172?filename=Effect">http://www.jafs.com.pl/pdf-80904-17172?filename=Effect</a></td>
+  <td>WHHSO2BB3AYSYOMNWAQLFJXA6RSDK4SZ</td>
+  <td>application/pdf</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.1109/lcomm.2012.120312.121675
+">10.1109/lcomm.2012.120312.121675
+</a></td>
+  <td><a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.337.8390&rep=rep1&type=pdf">http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.337.8390&rep=rep1&type=pdf</a></td>
+  <td>-</td>
+  <td><a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.337.8390&rep=rep1&type=pdf">http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.337.8390&rep=rep1&type=pdf</a></td>
+  <td>LP4ZFJ36GN6N7PKWSCLXFSQQFHTEZD3O</td>
+  <td>application/pdf</td>
+</tr>
+<tr>
+  <td></td>
+  <td><a href="http://www.jafs.com.pl/pdf-77058-14511?filename=Effects">http://www.jafs.com.pl/pdf-77058-14511?filename=Effects</a></td>
+  <td>-</td>
+  <td><a href="http://www.jafs.com.pl/pdf-77058-14511?filename=Effects">http://www.jafs.com.pl/pdf-77058-14511?filename=Effects</a></td>
+  <td>YCHB676GBGVZH5O5CAH7EM2USTRVH5VL</td>
+  <td>application/pdf</td>
+</tr>
+<tr>
+  <td></td>
+  <td><a href="https://content.iospress.com/download/information-services-and-use/isu851?id=information-services-and-use%2Fisu851">https://content.iospress.com/download/information-services-and-use/isu851?id=information-services-and-use%2Fisu851</a></td>
+  <td>-</td>
+  <td><a href="https://content.iospress.com/download/information-services-and-use/isu851?id=information-services-and-use%2Fisu851">https://content.iospress.com/download/information-services-and-use/isu851?id=information-services-and-use%2Fisu851</a></td>
+  <td>NFITUUUWEGUOI6OWWBVI45Z5JQQV4QBI</td>
+  <td>application/pdf</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.1007/bf02907787
+">10.1007/bf02907787
+</a></td>
+  <td><a href="https://link.springer.com/content/pdf/10.1007%2FBF02907787.pdf">https://link.springer.com/content/pdf/10.1007%2FBF02907787.pdf</a></td>
+  <td>-</td>
+  <td><a href="https://link.springer.com/content/pdf/10.1007%2FBF02907787.pdf">https://link.springer.com/content/pdf/10.1007%2FBF02907787.pdf</a></td>
+  <td>GF4XYUGTDKK4JL7FFLTJXMJJAZLCPQZ2</td>
+  <td>application/pdf</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.2172/73948
+">10.2172/73948
+</a></td>
+  <td><a href="https://digital.library.unt.edu/ark:/67531/metadc704352/m2/1/high_res_d/73948.pdf">https://digital.library.unt.edu/ark:/67531/metadc704352/m2/1/high_res_d/73948.pdf</a></td>
+  <td>-</td>
+  <td><a href="https://digital.library.unt.edu/ark:/67531/metadc704352/m2/1/high_res_d/73948.pdf">https://digital.library.unt.edu/ark:/67531/metadc704352/m2/1/high_res_d/73948.pdf</a></td>
+  <td>KKSZMZOTULQNXFHQKO4VGMXWI36NIZKH</td>
+  <td>application/pdf</td>
+</tr>
+</table><pre><b>QUERY:</b> SELECT identifier, initial_url, breadcrumbs, final_url, final_sha1, final_mimetype FROM crawl_result WHERE hit=1 ORDER BY random() LIMIT 10;</pre>
+<br></code></div><p>Handful of random non-success lines:</p>
+<div style="margin: 1em 3em 1em 3em; "><code><table>
+  <thead><tr>
+  <th>identifier</th>
+  <th>initial_url</th>
+  <th>breadcrumbs</th>
+  <th>final_url</th>
+  <th>final_status_code</th>
+  <th>final_mimetype</th>
+</tr></thead>
+<tr>
+  <td><a href="https://doi.org/10.1109/78.661335
+">10.1109/78.661335
+</a></td>
+  <td><a href="http://www-sccm.stanford.edu/Students/vanderveen/SPtrans98b.ps.gz">http://www-sccm.stanford.edu/Students/vanderveen/SPtrans98b.ps.gz</a></td>
+  <td>-</td>
+  <td><a href="http://www-sccm.stanford.edu/Students/vanderveen/SPtrans98b.ps.gz">http://www-sccm.stanford.edu/Students/vanderveen/SPtrans98b.ps.gz</a></td>
+  <td>-6</td>
+  <td>application/octet-stream</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.1109/mobhoc.2009.5336965
+">10.1109/mobhoc.2009.5336965
+</a></td>
+  <td><a href="http://www.cis.umassd.edu/%7Exbai/pubs/J-DirectionalCoverage.pdf">http://www.cis.umassd.edu/%7Exbai/pubs/J-DirectionalCoverage.pdf</a></td>
+  <td>-</td>
+  <td><a href="http://www.cis.umassd.edu/%7Exbai/pubs/J-DirectionalCoverage.pdf">http://www.cis.umassd.edu/%7Exbai/pubs/J-DirectionalCoverage.pdf</a></td>
+  <td>404</td>
+  <td>text/html</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.2340/00015555-1505
+">10.2340/00015555-1505
+</a></td>
+  <td><a href="https://www.medicaljournals.se/acta/content_files/download.php?doi=10.2340/00015555-1505">https://www.medicaljournals.se/acta/content_files/download.php?doi=10.2340/00015555-1505</a></td>
+  <td>-</td>
+  <td><a href="https://www.medicaljournals.se/acta/content_files/download.php?doi=10.2340/00015555-1505">https://www.medicaljournals.se/acta/content_files/download.php?doi=10.2340/00015555-1505</a></td>
+  <td>403</td>
+  <td>text/html</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.1016/s0166-3542(01)00195-4
+">10.1016/s0166-3542(01)00195-4
+</a></td>
+  <td><a href="http://dissertations.ub.rug.nl/FILES/faculties/science/2001/b.w.a.van.der.strate/c1.pdf">http://dissertations.ub.rug.nl/FILES/faculties/science/2001/b.w.a.van.der.strate/c1.pdf</a></td>
+  <td>-</td>
+  <td><a href="http://dissertations.ub.rug.nl/FILES/faculties/science/2001/b.w.a.van.der.strate/c1.pdf">http://dissertations.ub.rug.nl/FILES/faculties/science/2001/b.w.a.van.der.strate/c1.pdf</a></td>
+  <td>-6</td>
+  <td>application/octet-stream</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.1145/996566.996624
+">10.1145/996566.996624
+</a></td>
+  <td><a href="http://www2.dac.com/41st/41acceptedpapers.nsf/0c4c09c6ffa905c487256b7b007afb72/b23ec16f6e1fc42c87256e54007a1f0a/$file/13_3.pdf">http://www2.dac.com/41st/41acceptedpapers.nsf/0c4c09c6ffa905c487256b7b007afb72/b23ec16f6e1fc42c87256e54007a1f0a/$file/13_3.pdf</a></td>
+  <td>-</td>
+  <td><a href="http://www2.dac.com/41st/41acceptedpapers.nsf/0c4c09c6ffa905c487256b7b007afb72/b23ec16f6e1fc42c87256e54007a1f0a/$file/13_3.pdf">http://www2.dac.com/41st/41acceptedpapers.nsf/0c4c09c6ffa905c487256b7b007afb72/b23ec16f6e1fc42c87256e54007a1f0a/$file/13_3.pdf</a></td>
+  <td>404</td>
+  <td>text/html</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.1080/07438141.2011.627625
+">10.1080/07438141.2011.627625
+</a></td>
+  <td><a href="http://www.tandfonline.com/doi/pdf/10.1080/07438141.2011.627625?needAccess=true">http://www.tandfonline.com/doi/pdf/10.1080/07438141.2011.627625?needAccess=true</a></td>
+  <td>-</td>
+  <td><a href="http://www.tandfonline.com/doi/pdf/10.1080/07438141.2011.627625?needAccess=true">http://www.tandfonline.com/doi/pdf/10.1080/07438141.2011.627625?needAccess=true</a></td>
+  <td>302</td>
+  <td>text/html</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.1152/physiolgenomics.00296.2005
+">10.1152/physiolgenomics.00296.2005
+</a></td>
+  <td><a href="http://physiolgenomics.physiology.org/content/physiolgenomics/26/1/91.full.pdf">http://physiolgenomics.physiology.org/content/physiolgenomics/26/1/91.full.pdf</a></td>
+  <td>-</td>
+  <td><a href="http://physiolgenomics.physiology.org/content/physiolgenomics/26/1/91.full.pdf">http://physiolgenomics.physiology.org/content/physiolgenomics/26/1/91.full.pdf</a></td>
+  <td>301</td>
+  <td>application/octet-stream</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.1111/j.1540-6261.2006.01064.x
+">10.1111/j.1540-6261.2006.01064.x
+</a></td>
+  <td><a href="http://www.efmaefm.org/efmsympo2005/accepted_papers/06-Neil_Brisley_paper.pdf">http://www.efmaefm.org/efmsympo2005/accepted_papers/06-Neil_Brisley_paper.pdf</a></td>
+  <td>-</td>
+  <td><a href="http://www.efmaefm.org/efmsympo2005/accepted_papers/06-Neil_Brisley_paper.pdf">http://www.efmaefm.org/efmsympo2005/accepted_papers/06-Neil_Brisley_paper.pdf</a></td>
+  <td>404</td>
+  <td>text/html</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.1109/18.923725
+">10.1109/18.923725
+</a></td>
+  <td><a href="http://web.mit.edu/bchen/www/pubs/it01-chen.pdf">http://web.mit.edu/bchen/www/pubs/it01-chen.pdf</a></td>
+  <td>-</td>
+  <td><a href="http://web.mit.edu/bchen/www/pubs/it01-chen.pdf">http://web.mit.edu/bchen/www/pubs/it01-chen.pdf</a></td>
+  <td>404</td>
+  <td>text/html</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.2991/iccia.2012.347
+">10.2991/iccia.2012.347
+</a></td>
+  <td><a href="http://download.atlantis-press.com/php/download_paper.php?id=4295">http://download.atlantis-press.com/php/download_paper.php?id=4295</a></td>
+  <td>-</td>
+  <td><a href="http://download.atlantis-press.com/php/download_paper.php?id=4295">http://download.atlantis-press.com/php/download_paper.php?id=4295</a></td>
+  <td>301</td>
+  <td>text/html</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.1126/science.1164647
+">10.1126/science.1164647
+</a></td>
+  <td><a href="https://www.orgchem.science.ru.nl/pubs/10.1126_1668.pdf">https://www.orgchem.science.ru.nl/pubs/10.1126_1668.pdf</a></td>
+  <td>-</td>
+  <td><a href="https://www.orgchem.science.ru.nl/pubs/10.1126_1668.pdf">https://www.orgchem.science.ru.nl/pubs/10.1126_1668.pdf</a></td>
+  <td>403</td>
+  <td>text/html</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.1080/000155500750012298
+">10.1080/000155500750012298
+</a></td>
+  <td><a href="https://medicaljournals.se/acta/content_files/download.php?doi=10.1080/000155500750012298">https://medicaljournals.se/acta/content_files/download.php?doi=10.1080/000155500750012298</a></td>
+  <td>-</td>
+  <td><a href="https://medicaljournals.se/acta/content_files/download.php?doi=10.1080/000155500750012298">https://medicaljournals.se/acta/content_files/download.php?doi=10.1080/000155500750012298</a></td>
+  <td>403</td>
+  <td>text/html</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.1109/icpr.1996.546998
+">10.1109/icpr.1996.546998
+</a></td>
+  <td><a href="http://www.ee.ed.ac.uk/~sasg/Papers/96_papers/ICPR96_whn.ps">http://www.ee.ed.ac.uk/~sasg/Papers/96_papers/ICPR96_whn.ps</a></td>
+  <td>-</td>
+  <td><a href="http://www.ee.ed.ac.uk/~sasg/Papers/96_papers/ICPR96_whn.ps">http://www.ee.ed.ac.uk/~sasg/Papers/96_papers/ICPR96_whn.ps</a></td>
+  <td>-6</td>
+  <td>application/octet-stream</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.1137/s106482750241565x
+">10.1137/s106482750241565x
+</a></td>
+  <td><a href="http://www.seas.upenn.edu/~biros/papers/lnks/paper.pdf">http://www.seas.upenn.edu/~biros/papers/lnks/paper.pdf</a></td>
+  <td>R</td>
+  <td><a href="https://www.seas.upenn.edu/~biros/papers/lnks/paper.pdf">https://www.seas.upenn.edu/~biros/papers/lnks/paper.pdf</a></td>
+  <td>404</td>
+  <td>text/html</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.2340/00015555-1046
+">10.2340/00015555-1046
+</a></td>
+  <td><a href="https://www.medicaljournals.se/acta/content_files/download.php?doi=10.2340/00015555-1046">https://www.medicaljournals.se/acta/content_files/download.php?doi=10.2340/00015555-1046</a></td>
+  <td>-</td>
+  <td><a href="https://www.medicaljournals.se/acta/content_files/download.php?doi=10.2340/00015555-1046">https://www.medicaljournals.se/acta/content_files/download.php?doi=10.2340/00015555-1046</a></td>
+  <td>403</td>
+  <td>text/html</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.2991/sschd-16.2016.23
+">10.2991/sschd-16.2016.23
+</a></td>
+  <td><a href="http://download.atlantis-press.com/php/download_paper.php?id=25860593">http://download.atlantis-press.com/php/download_paper.php?id=25860593</a></td>
+  <td>R</td>
+  <td><a href="https://download.atlantis-press.com/php/download_paper.php?id=25860593">https://download.atlantis-press.com/php/download_paper.php?id=25860593</a></td>
+  <td>302</td>
+  <td>application/octet-stream</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.1152/jn.2001.85.6.2613
+">10.1152/jn.2001.85.6.2613
+</a></td>
+  <td><a href="http://www.nada.kth.se/~anfa/smalllargeforce.pdf">http://www.nada.kth.se/~anfa/smalllargeforce.pdf</a></td>
+  <td>-</td>
+  <td><a href="http://www.nada.kth.se/~anfa/smalllargeforce.pdf">http://www.nada.kth.se/~anfa/smalllargeforce.pdf</a></td>
+  <td>403</td>
+  <td>text/html</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.1152/jn.00416.2002
+">10.1152/jn.00416.2002
+</a></td>
+  <td><a href="http://jn.physiology.org/content/jn/89/1/12.full.pdf">http://jn.physiology.org/content/jn/89/1/12.full.pdf</a></td>
+  <td>-</td>
+  <td><a href="http://jn.physiology.org/content/jn/89/1/12.full.pdf">http://jn.physiology.org/content/jn/89/1/12.full.pdf</a></td>
+  <td>301</td>
+  <td>application/octet-stream</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.1152/physiolgenomics.00086.2011
+">10.1152/physiolgenomics.00086.2011
+</a></td>
+  <td><a href="http://physiolgenomics.physiology.org/content/physiolgenomics/43/21/1241.full.pdf">http://physiolgenomics.physiology.org/content/physiolgenomics/43/21/1241.full.pdf</a></td>
+  <td>-</td>
+  <td><a href="http://physiolgenomics.physiology.org/content/physiolgenomics/43/21/1241.full.pdf">http://physiolgenomics.physiology.org/content/physiolgenomics/43/21/1241.full.pdf</a></td>
+  <td>301</td>
+  <td>application/octet-stream</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.3732/ajb.1300036
+">10.3732/ajb.1300036
+</a></td>
+  <td><a href="http://www.amjbot.org/content/100/10/2016.full.pdf">http://www.amjbot.org/content/100/10/2016.full.pdf</a></td>
+  <td>-</td>
+  <td><a href="http://www.amjbot.org/content/100/10/2016.full.pdf">http://www.amjbot.org/content/100/10/2016.full.pdf</a></td>
+  <td>404</td>
+  <td>text/html</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.2139/ssrn.1458963
+">10.2139/ssrn.1458963
+</a></td>
+  <td><a href="http://www.efmaefm.org/0EFMAMEETINGS/EFMA%20ANNUAL%20MEETINGS/2010-Aarhus/EFMA2010_0074_fullpaper.pdf">http://www.efmaefm.org/0EFMAMEETINGS/EFMA%20ANNUAL%20MEETINGS/2010-Aarhus/EFMA2010_0074_fullpaper.pdf</a></td>
+  <td>-</td>
+  <td><a href="http://www.efmaefm.org/0EFMAMEETINGS/EFMA%20ANNUAL%20MEETINGS/2010-Aarhus/EFMA2010_0074_fullpaper.pdf">http://www.efmaefm.org/0EFMAMEETINGS/EFMA%20ANNUAL%20MEETINGS/2010-Aarhus/EFMA2010_0074_fullpaper.pdf</a></td>
+  <td>503</td>
+  <td>text/html</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.1152/ajpgi.00160.2012
+">10.1152/ajpgi.00160.2012
+</a></td>
+  <td><a href="http://ajpgi.physiology.org/content/ajpgi/304/10/G897.full.pdf">http://ajpgi.physiology.org/content/ajpgi/304/10/G897.full.pdf</a></td>
+  <td>-</td>
+  <td><a href="http://ajpgi.physiology.org/content/ajpgi/304/10/G897.full.pdf">http://ajpgi.physiology.org/content/ajpgi/304/10/G897.full.pdf</a></td>
+  <td>301</td>
+  <td>application/octet-stream</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.1080/09853111.2007.9736326
+">10.1080/09853111.2007.9736326
+</a></td>
+  <td><a href="https://www.tandfonline.com/doi/pdf/10.1080/09853111.2007.9736326?needAccess=true">https://www.tandfonline.com/doi/pdf/10.1080/09853111.2007.9736326?needAccess=true</a></td>
+  <td>R</td>
+  <td><a href="https://www.tandfonline.com/doi/pdf/10.1080/09853111.2007.9736326?needAccess=true&cookieSet=1">https://www.tandfonline.com/doi/pdf/10.1080/09853111.2007.9736326?needAccess=true&cookieSet=1</a></td>
+  <td>302</td>
+  <td>text/html</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.1152/japplphysiol.00624.2004
+">10.1152/japplphysiol.00624.2004
+</a></td>
+  <td><a href="http://jap.physiology.org/content/jap/99/2/665.full.pdf">http://jap.physiology.org/content/jap/99/2/665.full.pdf</a></td>
+  <td>-</td>
+  <td><a href="http://jap.physiology.org/content/jap/99/2/665.full.pdf">http://jap.physiology.org/content/jap/99/2/665.full.pdf</a></td>
+  <td>301</td>
+  <td>application/octet-stream</td>
+</tr>
+<tr>
+  <td><a href="https://doi.org/10.4304/jnw.4.6.436-444
+">10.4304/jnw.4.6.436-444
+</a></td>
+  <td><a href="http://academypublisher.net/jnw/vol04/no06/jnw0406436444.pdf">http://academypublisher.net/jnw/vol04/no06/jnw0406436444.pdf</a></td>
+  <td>-</td>
+  <td><a href="http://academypublisher.net/jnw/vol04/no06/jnw0406436444.pdf">http://academypublisher.net/jnw/vol04/no06/jnw0406436444.pdf</a></td>
+  <td>-6</td>
+  <td>application/octet-stream</td>
+</tr>
+</table><pre><b>QUERY:</b> SELECT identifier, initial_url, breadcrumbs, final_url, final_status_code, final_mimetype FROM crawl_result WHERE hit=0 ORDER BY random() LIMIT 25;</pre>
+<br></code></div>
