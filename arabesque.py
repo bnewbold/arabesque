@@ -12,7 +12,7 @@ Commands/modes:
 - forward <input.seed_identifiers> <output.sqlite>
 - everything <input.log> <input.cdx> <input.seed_identifiers> <output.sqlite>
 
-Design docs in README_pdf_crawl.md
+Design docs in DESIGN.md
 
 TODO:
 - open map in read-only when appropriate
