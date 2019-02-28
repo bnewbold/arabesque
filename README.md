@@ -14,8 +14,9 @@ style of crawl: fetching large numbers of files associated with a persistent
 identifier. For example, crawling tens of millions of Open Access PDFs (via
 direct link or landing page URL) associated with a DOI.
 
-Output is a (large) sqlite3 database file. Combine with `sqlite-notebook` to
-generate HTML reports:
+Output is a (large) sqlite3 database file. Combine with
+[`sqlite-notebook`](https://github.com/bnewbold/sqlite-notebook) to generate
+HTML reports:
 
     https://github.com/bnewbold/sqlite-notebook
 
