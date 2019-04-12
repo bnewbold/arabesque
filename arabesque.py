@@ -427,12 +427,17 @@ def backward(log_file, map_db, output_db, hit_mimetypes=FULLTEXT_MIMETYPES):
             counts['skip-map-scope'] += 1
             continue
         row = final_row
+        loop_stack = []
         while row and row.referrer_url != None:
             next_row = lookup_referrer_row(m, row.referrer_url)
             if next_row:
                 row = next_row
             else:
                 break
+            if row.referrer_url in loop_stack:
+                counts['map-url-redirect-loop'] += 1
+                break
+            loop_stack.append(row.referrer_url)
    
         initial_domain = urllib3.util.parse_url(row.url).host
         final_domain = urllib3.util.parse_url(final_row.url).host
