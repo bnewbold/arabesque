@@ -471,7 +471,7 @@ def forward(seed_id_file, map_db, output_db):
 
     i = 0
     for raw_line in seed_id_file:
-        line = raw_line.split('\t')
+        line = raw_line.strip().split('\t')
         if not line:
             counts['skip-raw-line'] += 1
             continue
