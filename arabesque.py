@@ -265,7 +265,8 @@ def create_out_table(db):
              final_sha1 text,
              final_mimetype text,
              final_was_dedupe bool,
-             hit bool);
+             hit bool,
+             postproc_status text);
     """)
 
 def referrer(log_file, map_db):
@@ -446,8 +447,8 @@ def backward(log_file, map_db, output_db, hit_mimetypes=FULLTEXT_MIMETYPES):
         final_timestamp = None
         if len(line.timestamp) >= 12 and line.timestamp[4] != '-':
             final_timestamp = line.timestamp[:12]
-        c.execute("INSERT INTO crawl_result VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
-            (row.url, None, initial_domain, final_row.breadcrumbs, final_row.url, final_domain, final_timestamp, final_row.status_code, line.sha1, final_row.mimetype, final_row.is_dedupe, True))
+        c.execute("INSERT INTO crawl_result VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (row.url, None, initial_domain, final_row.breadcrumbs, final_row.url, final_domain, final_timestamp, final_row.status_code, line.sha1, final_row.mimetype, final_row.is_dedupe, True, None))
         #print(final_row.breadcrumbs)
         i = i+1
         counts['inserted'] += 1
@@ -548,8 +549,8 @@ def forward(seed_id_file, map_db, output_db):
         final_domain = urllib3.util.parse_url(final_row.url).host
         # TODO: would pass SHA1 here if we had it? but not stored in referrer table
         # XXX: None => timestamp
-        c.execute("INSERT INTO crawl_result VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
-            (seed_url, identifier, initial_domain, final_row.breadcrumbs, final_row.url, final_domain, None, final_row.status_code, None, final_row.mimetype, final_row.is_dedupe, False))
+        c.execute("INSERT INTO crawl_result VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (seed_url, identifier, initial_domain, final_row.breadcrumbs, final_row.url, final_domain, None, final_row.status_code, None, final_row.mimetype, final_row.is_dedupe, False, None))
         #print(final_row.breadcrumbs)
         i = i+1
         counts['inserted'] += 1
@@ -577,6 +578,56 @@ def everything(log_file, seed_id_file, map_db, output_db, hit_mimetypes=FULLTEXT
     print("Everything complete!")
     print(bcounts)
     print(fcounts)
+
+def postprocess(sha1_status_file, output_db):
+    print("Updating database with post-processing status")
+    print("""If script fails, you may need to manually:
+        ALTER TABLE crawl_result ADD COLUMN postproc_status text;""")
+    counts = collections.Counter({'lines-parsed': 0})
+    c = output_db.cursor()
+
+    print("Building SHA-1 index (this can be slow)...")
+    c.executescript("""
+        CREATE INDEX IF NOT EXISTS result_final_sha1 on crawl_result (final_sha1);
+    """)
+
+    i = 0
+    for raw_line in sha1_status_file:
+        line = raw_line.strip().split('\t')
+        if not line or len(line) == 1:
+            counts['skip-raw-line'] += 1
+            continue
+        if len(line) == 2:
+            sha1, status = line[0:2]
+        else:
+            print("WEIRD: {}".format(raw_line))
+            assert len(line) <= 2
+
+        # parse/validate SHA-1
+        if sha1.startswith("sha1:"):
+            sha1 = sha1[5:]
+        if not len(sha1) == 32:
+            counts['skip-bad-sha1'] += 1
+            continue
+        status = status.strip()
+
+        res = c.execute('UPDATE crawl_result SET postproc_status=? WHERE final_sha1=?', [status, sha1])
+        if res.rowcount == 0:
+            counts['sha1-not-found'] += 1
+        else:
+            counts['rows-updated'] += res.rowcount
+
+        i = i+1
+        if i % 2000 == 0:
+            print("... postprocess {}".format(i))
+            output_db.commit()
+
+    output_db.commit()
+
+    c.close()
+    print("Forward map complete.")
+    print(counts)
+    return counts
 
 def main():
     parser = argparse.ArgumentParser()
@@ -627,6 +678,13 @@ def main():
     sub_everything.add_argument("--map_db_file",
         default=":memory:", type=str)
 
+    sub_postprocess = subparsers.add_parser('postprocess')
+    sub_postprocess.set_defaults(func=postprocess)
+    sub_postprocess.add_argument("sha1_status_file",
+        default=sys.stdin, type=argparse.FileType('rt'))
+    sub_postprocess.add_argument("db_file",
+        type=str)
+
     parser.add_argument("--html-hit",
         action="store_true",
         help="run in mode that considers only terminal HTML success")
@@ -666,6 +724,9 @@ def main():
                  sqlite3.connect(args.map_db_file),
                  sqlite3.connect(args.output_db_file, isolation_level='EXCLUSIVE'),
                  hit_mimetypes=hit_mimetypes)
+    elif args.func is postprocess:
+        postprocess(args.sha1_status_file,
+                 sqlite3.connect(args.db_file, isolation_level='EXCLUSIVE'))
     else:
         raise NotImplementedError
 
