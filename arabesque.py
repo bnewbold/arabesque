@@ -11,6 +11,8 @@ Commands/modes:
 - backward <input.log> <input-map.sqlite> <output.sqlite>
 - forward <input.seed_identifiers> <output.sqlite>
 - everything <input.log> <input.cdx> <input.seed_identifiers> <output.sqlite>
+- postprocess
+- dump_json
 
 Design docs in DESIGN.md
 
@@ -629,6 +631,17 @@ def postprocess(sha1_status_file, output_db):
     print(counts)
     return counts
 
+def dump_json(read_db, only_identifier_hits=False):
+
+    read_db.row_factory = sqlite3.Row
+    if only_identifier_hits:
+        cur = read_db.execute("SELECT * FROM crawl_result WHERE hit = 1 AND identifier IS NOT NULL;")
+    else:
+        cur = read_db.execute("SELECT * FROM crawl_result;")
+
+    for row in cur:
+        print(json.dumps(dict(row)))
+
 def main():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers()
@@ -685,6 +698,14 @@ def main():
     sub_postprocess.add_argument("db_file",
         type=str)
 
+    sub_dump_json = subparsers.add_parser('dump_json')
+    sub_dump_json.set_defaults(func=dump_json)
+    sub_dump_json.add_argument("db_file",
+        type=str)
+    sub_dump_json.add_argument("--only-identifier-hits",
+        action="store_true",
+        help="only dump rows where hit=true and identifier is non-null")
+
     parser.add_argument("--html-hit",
         action="store_true",
         help="run in mode that considers only terminal HTML success")
@@ -727,6 +748,9 @@ def main():
     elif args.func is postprocess:
         postprocess(args.sha1_status_file,
                  sqlite3.connect(args.db_file, isolation_level='EXCLUSIVE'))
+    elif args.func is dump_json:
+        dump_json(sqlite3.connect(args.db_file, isolation_level='EXCLUSIVE'),
+            only_identifier_hits=args.only_identifier_hits)
     else:
         raise NotImplementedError
 
