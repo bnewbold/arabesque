@@ -24,6 +24,7 @@ The simplest usage is to specify a seed-url/identifier mapping, a crawl log,
 and an output database file name:
 
     ./arabesque.py everything examples/crawl.log examples/seed_doi.tsv output.sqlite3
+    ./arabesque.py postprocess examples/grobid_status_codes.tsv output.sqlite3
 
 Then generate an HTML report:
 
