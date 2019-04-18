@@ -515,8 +515,8 @@ def forward(seed_id_file, map_db, output_db):
             print("MISSING url: {}".format(raw_line.strip()))
             # need to insert *something* in this case...
             initial_domain = urllib3.util.parse_url(seed_url).host
-            c.execute("INSERT INTO crawl_result VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
-                (seed_url, identifier, initial_domain, None, None, None, None, None, None, None, None, False))
+            c.execute("INSERT INTO crawl_result VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                (seed_url, identifier, initial_domain, None, None, None, None, None, None, None, None, False, None))
             counts['map-url-missing'] += 1
             continue
         row = first_row
