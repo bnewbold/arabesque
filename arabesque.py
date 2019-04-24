@@ -570,6 +570,7 @@ def forward(seed_id_file, map_db, output_db):
     c.executescript("""
         CREATE INDEX IF NOT EXISTS result_initial_url on crawl_result (initial_url);
         CREATE INDEX IF NOT EXISTS result_identifier on crawl_result (identifier);
+        CREATE INDEX IF NOT EXISTS result_final_sha1 on crawl_result (final_sha1);
     """)
     c.close()
     print("Forward map complete.")
@@ -587,15 +588,10 @@ def everything(log_file, seed_id_file, map_db, output_db, hit_mimetypes=FULLTEXT
 
 def postprocess(sha1_status_file, output_db):
     print("Updating database with post-processing status")
-    print("""If script fails, you may need to manually:
+    print("""If script fails (on old databases) you may need to manually:
         ALTER TABLE crawl_result ADD COLUMN postproc_status text;""")
     counts = collections.Counter({'lines-parsed': 0})
     c = output_db.cursor()
-
-    print("Building SHA-1 index (this can be slow)...")
-    c.executescript("""
-        CREATE INDEX IF NOT EXISTS result_final_sha1 on crawl_result (final_sha1);
-    """)
 
     i = 0
     for raw_line in sha1_status_file:
