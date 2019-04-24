@@ -645,14 +645,14 @@ def dump_json(read_db, only_identifier_hits=False, max_per_identifier=None):
     last_ident = None
     ident_count = 0
     for row in cur:
-        if last_ident and row[0] == last_ident:
+        if last_ident and row[1] == last_ident:
             ident_count += 1
             if max_per_identifier and ident_count > max_per_identifier:
-                print("SKIPPING identifier maxed out: {}".format(last_ident))
+                sys.stderr.write("SKIPPING identifier maxed out: {}".format(last_ident))
                 continue
         else:
             ident_count = 0
-        last_ident = row[0]
+        last_ident = row[1]
         print(json.dumps(dict(row)))
 
 def main():
