@@ -631,15 +631,27 @@ def postprocess(sha1_status_file, output_db):
     print(counts)
     return counts
 
-def dump_json(read_db, only_identifier_hits=False):
+def dump_json(read_db, only_identifier_hits=False, max_per_identifier=None):
 
     read_db.row_factory = sqlite3.Row
     if only_identifier_hits:
-        cur = read_db.execute("SELECT * FROM crawl_result WHERE hit = 1 AND identifier IS NOT NULL;")
+        sys.stderr.write("Only dumping hits with identifiers\n\r")
+        cur = read_db.execute("SELECT * FROM crawl_result WHERE hit = 1 AND identifier IS NOT NULL ORDER BY identifier;")
     else:
-        cur = read_db.execute("SELECT * FROM crawl_result;")
+        sys.stderr.write("Dumping all rows\n\r")
+        cur = read_db.execute("SELECT * FROM crawl_result ORDER BY identifier;")
 
+    last_ident = None
+    ident_count = 0
     for row in cur:
+        if last_ident and row[0] == last_ident:
+            ident_count += 1
+            if max_per_identifier and ident_count > max_per_identifier:
+                print("SKIPPING identifier maxed out: {}".format(last_ident))
+                continue
+        else:
+            ident_count = 0
+        last_ident = row[0]
         print(json.dumps(dict(row)))
 
 def main():
@@ -705,6 +717,9 @@ def main():
     sub_dump_json.add_argument("--only-identifier-hits",
         action="store_true",
         help="only dump rows where hit=true and identifier is non-null")
+    sub_dump_json.add_argument("--max-per-identifier",
+        default=False, type=int,
+        help="don't dump more than this many rows per unique identifier")
 
     parser.add_argument("--html-hit",
         action="store_true",
