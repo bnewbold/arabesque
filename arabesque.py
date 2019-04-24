@@ -518,7 +518,7 @@ def forward(seed_id_file, map_db, output_db):
         # simple for redirect case (no branching); arbitrary for the fan-out case
         first_row = lookup_referrer_row(m, seed_url)
         if not first_row:
-            print("MISSING url: {}".format(raw_line.strip()))
+            #print("MISSING url: {}".format(raw_line.strip()))
             # need to insert *something* in this case...
             initial_domain = urllib3.util.parse_url(seed_url).host
             c.execute("INSERT INTO crawl_result VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
