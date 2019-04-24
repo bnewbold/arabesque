@@ -11,8 +11,8 @@ Commands/modes:
 - backward <input.log> <input-map.sqlite> <output.sqlite>
 - forward <input.seed_identifiers> <output.sqlite>
 - everything <input.log> <input.cdx> <input.seed_identifiers> <output.sqlite>
-- postprocess
-- dump_json
+- postprocess <sha1_status.tsv> <output.sqlite>
+- dump_json <output.sqlite>
 
 Design docs in DESIGN.md
 
@@ -21,8 +21,9 @@ Software under the GPLv3 license (a copy of which should be included with this
 file).
 
 TODO:
+- pass SHA-1 and timestamp in forward mode (?)
+- include final_size (if possible from crawl log)
 - open map in read-only when appropriate
-- some kind of stats dump command? (querying sqlite)
 - should referrer map be UNIQ?
 - forward outputs get generated multiple times?
 - try: https://pypi.org/project/urlcanon/
