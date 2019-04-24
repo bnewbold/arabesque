@@ -766,7 +766,8 @@ def main():
                  sqlite3.connect(args.db_file, isolation_level='EXCLUSIVE'))
     elif args.func is dump_json:
         dump_json(sqlite3.connect(args.db_file, isolation_level='EXCLUSIVE'),
-            only_identifier_hits=args.only_identifier_hits)
+            only_identifier_hits=args.only_identifier_hits,
+            max_per_identifier=args.max_per_identifier)
     else:
         raise NotImplementedError
 
