@@ -416,7 +416,11 @@ def backward(log_file, map_db, output_db, hit_mimetypes=FULLTEXT_MIMETYPES):
             continue
 
         if line.mimetype == "application/octet-stream" and int(line.size_bytes) < 1000:
-            counts['skip-tiny-octetstream-'] += 1
+            counts['skip-tiny-octetstream'] += 1
+            continue
+
+        if int(line.size_bytes) == 0 or line.sha1 == "3I42H3S6NNFQ2MSVX7XZKYAYSCX5QBYJ":
+            counts['skip-empty-file'] += 1
             continue
 
         #print(time.time())
