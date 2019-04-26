@@ -632,7 +632,7 @@ def postprocess(sha1_status_file, output_db):
     print(counts)
     return counts
 
-def dump_json(read_db, only_identifier_hits=False, max_per_identifier=None):
+def dump_json(read_db, only_identifier_hits=False, max_per_identifier=None, only_direct_breadcrumbs=False):
 
     read_db.row_factory = sqlite3.Row
     if only_identifier_hits:
@@ -645,13 +645,24 @@ def dump_json(read_db, only_identifier_hits=False, max_per_identifier=None):
     last_ident = None
     ident_count = 0
     for row in cur:
+        if only_direct_breadcrumbs:
+            # very conservative: must be a direct hit, or an embed. no link
+            # hops allowed. the redirect ignoring logic is easier to express in
+            # python than SQL
+            # TODO: do the work and express in SQL so we can have sane reporting
+            bc = row[3]
+            bc = bc.replace('R', '')
+            if len(bc) > 1:
+                continue
+            if bc not in ('-', 'E', ''):
+                continue
         if last_ident and row[1] == last_ident:
             ident_count += 1
             if max_per_identifier and ident_count > max_per_identifier:
                 sys.stderr.write("SKIPPING identifier maxed out: {}\n\r".format(last_ident))
                 continue
         else:
-            ident_count = 0
+            ident_count = 1
         last_ident = row[1]
         print(json.dumps(dict(row)))
 
@@ -718,6 +729,9 @@ def main():
     sub_dump_json.add_argument("--only-identifier-hits",
         action="store_true",
         help="only dump rows where hit=true and identifier is non-null")
+    sub_dump_json.add_argument("--only-direct-breadcrumbs",
+        action="store_true",
+        help="only dump rows where breadcrumbs are clear (direct, redirect, etc)")
     sub_dump_json.add_argument("--max-per-identifier",
         default=False, type=int,
         help="don't dump more than this many rows per unique identifier")
@@ -767,6 +781,7 @@ def main():
     elif args.func is dump_json:
         dump_json(sqlite3.connect(args.db_file, isolation_level='EXCLUSIVE'),
             only_identifier_hits=args.only_identifier_hits,
+            only_direct_breadcrumbs=args.only_direct_breadcrumbs,
             max_per_identifier=args.max_per_identifier)
     else:
         raise NotImplementedError
