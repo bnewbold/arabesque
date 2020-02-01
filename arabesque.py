@@ -452,8 +452,8 @@ def backward(log_file, map_db, output_db, hit_mimetypes=FULLTEXT_MIMETYPES):
         # convert to IA CDX timestamp format
         #final_timestamp = dateutil.parser.parse(line.timestamp).strftime("%Y%m%d%H%M%S")
         final_timestamp = None
-        if len(line.timestamp) >= 12 and line.timestamp[4] != '-':
-            final_timestamp = line.timestamp[:12]
+        if len(line.timestamp) >= 14 and line.timestamp[4] != '-':
+            final_timestamp = line.timestamp[:14]
         c.execute("INSERT INTO crawl_result VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (row.url, None, initial_domain, final_row.breadcrumbs, final_row.url, final_domain, final_timestamp, final_row.status_code, line.sha1, final_row.mimetype, final_row.is_dedupe, True, None))
         #print(final_row.breadcrumbs)
